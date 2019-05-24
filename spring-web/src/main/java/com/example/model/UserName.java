@@ -1,14 +1,18 @@
 package com.example.model;
 
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class UserName {
 
-  @NotNull
-  private final String value;
+  @NotNull private final String value;
+  private static final int MAX_VALUE_LENGTH = 35;
+  private static final int MIN_VALUE_LENGTH = 2;
+  private static Pattern PATTERN = Pattern.compile("^[a-zA-Z]+[a-zA-Z0-9]*$");
 
   @Contract(pure = true)
   private UserName(@NotNull final String value) {
@@ -21,9 +25,22 @@ public class UserName {
     return new UserName(value);
   }
 
+  public void validate() {
+    final Matcher matcher = PATTERN.matcher(value);
+
+    if (value.length() < MIN_VALUE_LENGTH) {
+      throw new IllegalArgumentException("Invalid UserName");
+    }
+    if (value.length() > MAX_VALUE_LENGTH) {
+      throw new IllegalArgumentException("Invalid UserName");
+    }
+    if (!matcher.find()) {
+      throw new IllegalArgumentException("Invalid UserName");
+    }
+  }
+
   public static Optional<UserName> from(@Nullable final String value) {
-    return Optional.ofNullable(value)
-        .map(UserName::of);
+    return Optional.ofNullable(value).map(UserName::of);
   }
 
   public String value() {
@@ -42,7 +59,6 @@ public class UserName {
     final UserName userName = (UserName) o;
 
     return value.equals(userName.value);
-
   }
 
   @Override
@@ -58,5 +74,4 @@ public class UserName {
     sb.append('}');
     return sb.toString();
   }
-
 }

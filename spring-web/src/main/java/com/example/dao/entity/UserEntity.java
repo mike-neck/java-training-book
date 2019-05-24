@@ -5,19 +5,21 @@ import com.example.model.UserId;
 import com.example.model.UserName;
 import org.jetbrains.annotations.NotNull;
 import org.seasar.doma.Entity;
+import org.seasar.doma.Id;
 import org.seasar.doma.Table;
 import org.seasar.doma.jdbc.entity.NamingType;
 
 @SuppressWarnings("WeakerAccess")
 @Entity(immutable = true, naming = NamingType.SNAKE_LOWER_CASE)
-@Table
+@Table(name = "users")
 public class UserEntity {
 
-  public final UserId userId;
+  @Id public final UserId userId;
   public final UserName name;
   public final CreatedAt createdAt;
 
-  public UserEntity(final @NotNull UserId userId,
+  public UserEntity(
+      final @NotNull UserId userId,
       final @NotNull UserName name,
       final @NotNull CreatedAt createdAt) {
     this.userId = userId;
